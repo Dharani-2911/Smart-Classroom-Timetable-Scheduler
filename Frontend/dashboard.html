@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard - Smart Classroom</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="navbar">
+    <h2>📚 Smart Classroom Dashboard</h2>
+    <div class="user-info">
+        <span>Welcome, Admin</span>
+        <a href="login.html" class="logout-btn">Logout</a>
+    </div>
+</div>
+
+<div class="quick-links">
+    <a href="attendance.html" class="quick-link-card">
+        <div class="quick-link-icon">📝</div>
+        <div class="quick-link-text">Attendance</div>
+    </a>
+    <a href="#" class="quick-link-card" onclick="openAdminPanel(); return false;">
+        <div class="quick-link-icon">👨‍🏫</div>
+        <div class="quick-link-text">Admin Panel</div>
+    </a>
+    <a href="#" class="quick-link-card" onclick="alert('Student Registration - Coming Soon!'); return false;">
+        <div class="quick-link-icon">👨‍🎓</div>
+        <div class="quick-link-text">Register Student</div>
+    </a>
+</div>
+
+<div class="main-content">
+    <!-- Admin Panel Modal -->
+    <div id="adminPanel" class="modal">
+        <div class="modal-content admin-modal">
+            <span class="close" onclick="closeAdminPanel()">&times;</span>
+            <h2>👨‍🏫 Admin Panel - Timetable Management</h2>
+            
+            <div class="admin-tabs">
+                <button class="tab-btn active" onclick="showTab('editSlots')">Edit Slots</button>
+                <button class="tab-btn" onclick="showTab('addSlot')">Add New Slot</button>
+                <button class="tab-btn" onclick="showTab('dragDrop')">Drag & Drop</button>
+            </div>
+            
+            <!-- Edit Existing Slots Tab -->
+            <div id="editSlots" class="tab-content active">
+                <h3>Edit Existing Timetable Slots</h3>
+                <div id="slotsList" class="slots-list"></div>
+            </div>
+            
+            <!-- Add New Slot Tab -->
+            <div id="addSlot" class="tab-content">
+                <h3>Add New Timetable Slot</h3>
+                <form id="addSlotForm" class="admin-form">
+                    <div class="form-group">
+                        <label>Day of Week:</label>
+                        <select id="dayOfWeek" required>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                            <option value="Saturday">Saturday</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Time Slot:</label>
+                        <select id="timeSlot" required>
+                            <option value="9:00-10:00">9:00 - 10:00</option>
+                            <option value="10:00-10:50">10:00 - 10:50</option>
+                            <option value="11:05-12:00">11:05 - 12:00</option>
+                            <option value="12:00-13:00">12:00 - 13:00</option>
+                            <option value="14:00-14:50">14:00 - 14:50</option>
+                            <option value="15:05-16:00">15:05 - 16:00</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Subject:</label>
+                        <input type="text" id="subject" placeholder="Enter subject name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Teacher/Faculty:</label>
+                        <input type="text" id="faculty" placeholder="Enter faculty name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Department:</label>
+                        <input type="text" id="department" placeholder="e.g., CSE, ECE, MECH" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Semester:</label>
+                        <input type="number" id="semester" min="1" max="8" placeholder="1-8" required>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">Add Slot</button>
+                </form>
+            </div>
+            
+            <!-- Drag & Drop Tab -->
+            <div id="dragDrop" class="tab-content">
+                <h3>Drag & Drop Timetable Editor</h3>
+                <p class="info-text">💡 Drag and drop slots to rearrange them easily</p>
+                <div id="draggableTimetable" class="draggable-timetable"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+
+        <div class="card feature-card">
+            <div class="card-icon">📅</div>
+            <h3>Timetable Generator</h3>
+            <p>Automatically generate weekly class schedules</p>
+            <button onclick="generateTimetable()">Generate Now</button>
+        </div>
+
+        <div class="card feature-card">
+            <div class="card-icon">📝</div>
+            <h3>Attendance Management</h3>
+            <p>Track and manage student attendance records</p>
+            <a href="attendance.html">
+                <button>Manage Attendance</button>
+            </a>
+        </div>
+
+        <div class="card feature-card">
+            <div class="card-icon">👨‍🏫</div>
+            <h3>Admin Panel</h3>
+            <p>Edit and manage timetable with advanced features</p>
+            <button onclick="openAdminPanel()">Open Admin Panel</button>
+        </div>
+
+    </div>
+
+    <div class="table-container">
+        <h3 class="section-title"><span class="icon">📋</span> Weekly Timetable</h3>
+        <div class="table-wrapper">
+            <table id="timetable">
+            <tr>
+            <th>Day</th>
+            <th>9:00 - 10:00</th>
+            <th>10:00 - 10:50</th>
+            <th>10:50 - 11:05<br><small>Break</small></th>
+            <th>11:05 - 12:00</th>
+            <th>12:00 - 1:00</th>
+            <th>1:00 - 2:00<br><small>Lunch</small></th>
+            <th>2:00 - 2:50</th>
+            <th>2:50 - 3:05<br><small>Break</small></th>
+            <th>3:05 - 4:00</th>
+            </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
