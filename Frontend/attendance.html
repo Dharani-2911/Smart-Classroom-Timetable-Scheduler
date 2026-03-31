@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Attendance - Smart Classroom</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="navbar">
+    <h2>📝 Attendance Management</h2>
+    <div class="user-info">
+        <span>Welcome, Admin</span>
+        <a href="dashboard.html" class="logout-btn">Back to Dashboard</a>
+    </div>
+</div>
+
+<div class="attendance-container">
+    <div class="input-section">
+        <div class="glass-card">
+            <h3><span class="icon">👨‍🎓</span> Mark Attendance</h3>
+            <input type="text" id="name" placeholder="Enter Student Name">
+            <div class="button-group">
+                <button onclick="markAttendance()" class="primary-btn">Mark Present ✓</button>
+                <button onclick="loadAttendance()" class="secondary-btn">View All 📊</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-section">
+        <h3 class="section-title"><span class="icon">📋</span> Attendance Records</h3>
+        <div class="table-wrapper">
+            <table id="attTable">
+                <tr>
+                    <th>Sl. No</th>
+                    <th>Student Name</th>
+                    <th>Status</th>
+                    <th>Login Time</th>
+                    <th>Date</th>
+                    <th>Timestamp</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
