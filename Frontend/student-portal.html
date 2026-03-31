@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Student Dashboard - Smart Classroom</title>
+<link rel="stylesheet" href="style.css">
+<!-- Add html2pdf library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+
+<body>
+
+<div class="navbar">
+    <h2>👨‍🎓 Student Portal</h2>
+    <div class="user-info">
+        <span id="student-name">Welcome, Student</span>
+        <a href="student-login.html" class="logout-btn">Logout</a>
+    </div>
+</div>
+
+<div class="main-content">
+    <!-- Student Info Section -->
+    <div class="student-info-card">
+        <div class="info-header">
+            <h3>📋 My Information</h3>
+        </div>
+        <div class="info-grid">
+            <div class="info-item">
+                <label>Name:</label>
+                <span id="display-name">-</span>
+            </div>
+            <div class="info-item">
+                <label>Roll Number:</label>
+                <span id="display-roll">-</span>
+            </div>
+            <div class="info-item">
+                <label>Department:</label>
+                <span id="display-dept">-</span>
+            </div>
+            <div class="info-item">
+                <label>Semester:</label>
+                <span id="display-sem">-</span>
+            </div>
+            <div class="info-item">
+                <label>Email:</label>
+                <span id="display-email">-</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Timetable Section -->
+    <div class="section-container">
+        <div class="section-header">
+            <h3 class="section-title"><span class="icon">📅</span> My Timetable</h3>
+            <button onclick="downloadTimetablePDF()" class="pdf-btn">📄 Download PDF</button>
+        </div>
+        <div class="table-wrapper">
+            <!-- Added pdf-container class for better PDF styling -->
+            <div id="timetable-pdf-container" style="background: white; padding: 20px; border-radius: 10px;">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <h2 style="color: #667eea; margin: 0 0 5px 0;">📚 Smart Classroom - Weekly Timetable</h2>
+                    <p style="margin: 5px 0; color: #666;"><strong>Student:</strong> <span id="pdf-student-name">-</span></p>
+                    <p style="margin: 5px 0; color: #666;"><strong>Department:</strong> <span id="pdf-department">-</span> | <strong>Semester:</strong> <span id="pdf-semester">-</span></p>
+                    <p style="margin: 5px 0; color: #999; font-size: 12px;">Generated on: <span id="pdf-date">-</span></p>
+                </div>
+                <table id="student-timetable">
+                    <tr>
+                        <th>Day</th>
+                        <th>9:00 - 10:00</th>
+                        <th>10:00 - 10:50</th>
+                        <th>10:50 - 11:05<br><small>Break</small></th>
+                        <th>11:05 - 12:00</th>
+                        <th>12:00 - 13:00</th>
+                        <th>13:00 - 14:00<br><small>Lunch</small></th>
+                        <th>14:00 - 14:50</th>
+                        <th>14:50 - 15:05<br><small>Break</small></th>
+                        <th>15:05 - 16:00</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attendance Section -->
+    <div class="section-container">
+        <h3 class="section-title"><span class="icon">✅</span> My Attendance</h3>
+        <div class="attendance-stats">
+            <div class="stat-card">
+                <div class="stat-number" id="total-days">0</div>
+                <div class="stat-label">Total Days</div>
+            </div>
+            <div class="stat-card present">
+                <div class="stat-number" id="present-days">0</div>
+                <div class="stat-label">Present</div>
+            </div>
+            <div class="stat-card absent">
+                <div class="stat-number" id="absent-days">0</div>
+                <div class="stat-label">Absent</div>
+            </div>
+            <div class="stat-card percentage">
+                <div class="stat-number" id="attendance-percent">0%</div>
+                <div class="stat-label">Attendance %</div>
+            </div>
+        </div>
+        
+        <button onclick="loadMyAttendance()" class="action-btn">Refresh Attendance</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+    // Load student data on page load
+    window.onload = function() {
+        const student = JSON.parse(localStorage.getItem('currentStudent'));
+        if(!student) {
+            window.location.href = 'student-login.html';
+            return;
+        }
+        
+        // Display student information
+        document.getElementById('student-name').textContent = `Welcome, ${student.name}`;
+        document.getElementById('display-name').textContent = student.name;
+        document.getElementById('display-roll').textContent = student.roll_number;
+        document.getElementById('display-dept').textContent = student.department;
+        document.getElementById('display-sem').textContent = `Semester ${student.semester}`;
+        document.getElementById('display-email').textContent = student.email;
+        
+        // Populate PDF header info
+        document.getElementById('pdf-student-name').textContent = student.name;
+        document.getElementById('pdf-department').textContent = student.department;
+        document.getElementById('pdf-semester').textContent = `Semester ${student.semester}`;
+        document.getElementById('pdf-date').textContent = new Date().toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+        
+        // Load timetable
+        loadStudentTimetable(student.department, student.semester);
+        
+        // Load attendance
+        loadMyAttendance();
+    };
+</script>
+
+</body>
+</html>
